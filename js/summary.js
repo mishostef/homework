@@ -21,9 +21,6 @@ console.log('budget', budgetsArray);
 const t = document.getElementsByClassName('editor')[0];
 
 console.log(t);
-
-//const headerRow = createTableHeaders(['Category', 'Jan', 'Feb', 'Mar', 'Total']);
-//console.log(headerRow);
 const tableData = [
     [380, 410, 360, 1150],
     [510, 480, 535, 1525],
@@ -31,30 +28,46 @@ const tableData = [
     [510, 480, 535, 1525],
     [510, 480, 535, 1525],
 ]
-const footerData=[
+const footerData = [
     [380, 410, 360, 1150],
     [510, 480, 535, 1525],
     [510, 480, 535, 1525],
 ]
 const newBody = createTableBody(tableData);
-console.log(newBody);
 const body = t.querySelector('tbody');
 const headers = t.querySelector('thead');
 const newHeaders = createTableHeaders(['Category', 'Jan', 'Feb', 'Mar', 'Total']);
+const footer = t.querySelector('tfoot');
+const newFooter = createTableFooter(footerData);
+console.log(footer);
+
 t.replaceChild(newHeaders, headers);
 t.replaceChild(newBody, body);
+t.replaceChild(newFooter,footer);
 
 
 
 
-function createTableFooter()
+function createTableFooter(footerData) {
+    const footer = document.createElement('tfoot');
+    const currencyIndices = [0, 1, 2, 3];
+    const totalSpent = createTableRow(footerData[0], currencyIndices, 'Total Spent');
+    totalSpent.classList.add('total');
+    const budgetOverruns = createTableRow(footerData[0], currencyIndices, 'Budget overruns');
+    budgetOverruns.classList.add('overrun');
+    const savings = createTableRow(footerData[0], currencyIndices, 'Savings');
+    savings.classList.add('savings');
+    footer.appendChild(totalSpent);
+    footer.appendChild(budgetOverruns)
+    footer.appendChild(savings);
+    return footer;
+}
 
 function createTableBody(tableData) {
     const tbody = document.createElement('tbody');
     tableData.forEach((tableRow, i) => {
         const currencyIndices = [0, 1, 2, 3];
         const row = createTableRow(tableRow, currencyIndices, categories[i]);
-
         tbody.appendChild(row);
     })
     return tbody;
