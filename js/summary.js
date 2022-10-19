@@ -5,17 +5,6 @@ const categories = ['Utilities', 'Groceries', 'Entertainment', 'Transport', 'Oth
 console.log('expenses', expensesArray);
 
 console.log('budget', budgetsArray);
-// const summary = {};
-
-// const budgetTransformed = transformBudget();
-// console.log(JSON.stringify(budgetTransformed));
-
-
-// addExpensesToBudget();
-// console.log(JSON.stringify(budgetTransformed));
-
-// const table = getTableData(budgetTransformed);
-// console.log('table=', JSON.stringify(table));
 
 
 const t = document.getElementsByClassName('editor')[0];
@@ -112,6 +101,17 @@ function createTableRow(tabledataArray, indicesArray, th) {
 
 
 
+// const summary = {};
+
+// const budgetTransformed = transformBudget();
+// console.log(JSON.stringify(budgetTransformed));
+
+
+// addExpensesToBudget();
+// console.log(JSON.stringify(budgetTransformed));
+
+// const table = getTableData(budgetTransformed);
+// console.log('table=', JSON.stringify(table));
 
 
 

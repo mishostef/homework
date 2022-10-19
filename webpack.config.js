@@ -5,7 +5,8 @@ module.exports = {
     entry: {
         expenses:'./js/expenses.js',
         budget: './js/budget.js',
-        summary:'./js/summary.js'
+        summary:'./js/summary.js',
+        dashboard:'./js/dashboard.js'
     },
     output: {
         path: path.join(__dirname, 'dist'),
