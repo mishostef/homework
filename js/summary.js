@@ -5,11 +5,58 @@ const categories = ['Utilities', 'Groceries', 'Entertainment', 'Transport', 'Oth
 console.log('expenses', expensesArray);
 
 console.log('budget', budgetsArray);
+const allDates = getAllDates(budgetsArray, expensesArray);
+console.log(allDates);
+allDates.sort(dateSort);
+console.log(allDates);
+const sortedUnique = [...new Set(allDates)];
+console.log(sortedUnique);
+const slicedDates = getPeriod(sortedUnique, 6);
+console.log(slicedDates);
+console.log(dateToMonthConverter(slicedDates));
+
+function getAllDates(budgetArr, expensesArr) {
+    const allDates = [];
+    expensesArr.forEach(exp => {
+        const dateArr = exp[0].split('.');
+        dateArr.shift();
+        const newDate = dateArr.join('.')
+        exp[0] = newDate;
+        allDates.push(newDate);
+    })
+    console.log(expensesArr)
+    budgetArr.forEach(budget => {
+        const budgetDate = budget[0];
+        console.log(budgetDate);
+        allDates.push(budgetDate);
+    })
+    return allDates;
+}
+
+
+function dateSort(dateString1, dateString2) {
+    const [month1, year1] = dateString1.split('.');
+    const [month2, year2] = dateString2.split('.');
+    return year1 - year2 || months.indexOf(month1) - months.indexOf(month2);
+}
+
+
+
+function getPeriod(sortedDates, startIndex = 0) {
+    return sortedDates.slice(startIndex, Math.min(sortedDates.length, startIndex + 3));
+}
+
+function dateToMonthConverter(dateArr) {
+    return dateArr.map(x => x.split('.')[0]);
+}
+
+
+
+
 
 
 const t = document.getElementsByClassName('editor')[0];
 
-console.log(t);
 const tableData = [
     [380, 410, 360, 1150],
     [510, 480, 535, 1525],
@@ -28,11 +75,10 @@ const headers = t.querySelector('thead');
 const newHeaders = createTableHeaders(['Category', 'Jan', 'Feb', 'Mar', 'Total']);
 const footer = t.querySelector('tfoot');
 const newFooter = createTableFooter(footerData);
-console.log(footer);
 
 t.replaceChild(newHeaders, headers);
 t.replaceChild(newBody, body);
-t.replaceChild(newFooter,footer);
+t.replaceChild(newFooter, footer);
 
 
 
