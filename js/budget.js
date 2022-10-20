@@ -5,6 +5,11 @@ let rowToReplace = null;
 
 
 const records = getRecord('budget');
+hydrate()
+function hydrate() {
+    const tbody = document.getElementsByTagName('tbody')[0];
+    tbody.replaceChildren(...[...records.values()].map(x => createTableRow(x, [1, 2])));
+}
 budgetTable.addEventListener('click', function (e) {
     const buttonText = e.target.textContent;
     const row = e.target.parentElement.parentElement;

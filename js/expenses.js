@@ -1,5 +1,5 @@
 import {
-    months, truncateDate, getId, validateData, convertDatestring,
+    truncateDate, getId, validateData, convertDatestring,
     getFormData, dateToString, createTableRow
 } from "./utils.js";
 
@@ -7,7 +7,7 @@ import {
 const categories = { "Other": 0, "Utilities": 1, "Groceries": 2, "Entertainment": 3, "Transport": 4 }
 const expensesTable = document.getElementsByClassName('editor')[0];
 let rowToReplace = null;
-//edit event on table
+
 expensesTable.addEventListener('click', function (e) {
     const buttonText = e.target.textContent;
     const row = e.target.parentElement.parentElement;
@@ -57,7 +57,6 @@ expensesForm.addEventListener('submit', (e) => {
     }
     const id = getId();
     const rowData = parseExpensesData(data);
-    console.log('rowdata= ', rowData);
     const storageData = rowData.slice();
     storageData[0] = `${storageData[0]}.${new Date(data.date).getFullYear()}`;
     records.set(id, storageData);
