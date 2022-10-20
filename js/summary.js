@@ -11,17 +11,14 @@ const sortedUniqueDates = [...new Set(allDates)];
 const slicedDates = getPeriod(sortedUniqueDates, 6);
 const length = slicedDates.length;
 const bodyDdata = bodyEmptyArr(length + 1);
-//const footerData = footerEmptyArr(length + 1);
 console.log(slicedDates);
 const headerMonths = dateToMonthConverter(slicedDates);
 console.log(headerMonths);
 const bodyData = getBodyData(slicedDates, bodyDdata);
-console.log('expenses array', expensesArray);
-console.log(bodyData);
 const totalSpent = bodyData.pop();
 console.log('totalSpent', totalSpent);
-const fffdd = getFooterData(totalSpent, budgetsArray, slicedDates);
-console.log(fffdd);
+const footerData = getFooterData(totalSpent, budgetsArray, slicedDates);
+console.log(footerData);
 function getAllDates(budgetArr, expensesArr) {
     const allDates = [];
     expensesArr.forEach(exp => {
@@ -58,6 +55,7 @@ function getBodyData(slicedDates, bodyDdata) {
     console.log(slicedDates);
     const width = bodyDdata[0].length;
     const height = bodyDdata.length;
+    let totalExpenses = 0;
     expensesArray.forEach((exp) => {
         const expDate = exp[0];
         slicedDates.forEach((slicedDate, dateIndex) => {
@@ -68,10 +66,13 @@ function getBodyData(slicedDates, bodyDdata) {
                 bodyDdata[categoryIndex][dateIndex] += amount;
                 bodyDdata[categoryIndex][width - 1] += amount;
                 bodyDdata[height - 1][dateIndex] += amount;
+                totalExpenses += amount;
             }
         });
 
     })
+    bodyDdata[height - 1][width - 1] = totalExpenses;
+    console.log('bodyData=', bodyDdata)
     return bodyDdata;
 }
 //footer
@@ -79,10 +80,9 @@ function getFooterData(total, budgetArr, dates) {
     const footerHeight = 3;
     const footerWidth = total.length;
     const footerArr = [...Array(footerHeight)].map(e => Array(footerWidth).fill(0));
-    console.log('footerArr', footerArr);
     footerArr[0] = total;
     console.log(footerArr);
-    budgetArr.forEach((record, ri) => {
+    budgetArr.forEach((record) => {
         const budgetDate = record[0];
         dates.forEach((d, di) => {
             if (d === budgetDate) {
@@ -96,7 +96,8 @@ function getFooterData(total, budgetArr, dates) {
     for (let t = 0; t < total.length; t++) {
         if (total[t] !== 0) {
             footerArr[1][t] = -1 * Math.min(footerArr[1][t] - total[t], 0);
-            footerArr[2][t] = Math.max(footerArr[2][t] - total[t]);
+            footerArr[2][t] = Math.max(footerArr[2][t] - total[t], 0);
+
         }
     }
     console.log(footerArr)
@@ -108,17 +109,12 @@ function getFooterData(total, budgetArr, dates) {
 const t = document.getElementsByClassName('editor')[0];
 
 const tableData = bodyData;
-const fD = [
-    [380, 410, 360, 1150],
-    [510, 480, 535, 1525],
-    [510, 480, 535, 1525],
-]
 const newBody = createTableBody(tableData);
 const body = t.querySelector('tbody');
 const headers = t.querySelector('thead');
 const newHeaders = createTableHeaders(['Category', ...headerMonths, 'Total']);
 const footer = t.querySelector('tfoot');
-const newFooter = createTableFooter(fD);
+const newFooter = createTableFooter(footerData);
 
 t.replaceChild(newHeaders, headers);
 t.replaceChild(newBody, body);
@@ -132,9 +128,9 @@ function createTableFooter(footerData) {
     const currencyIndices = [0, 1, 2, 3];
     const totalSpent = createTableRow(footerData[0], currencyIndices, 'Total Spent');
     totalSpent.classList.add('total');
-    const budgetOverruns = createTableRow(footerData[0], currencyIndices, 'Budget overruns');
+    const budgetOverruns = createTableRow(footerData[1], currencyIndices, 'Budget overruns');
     budgetOverruns.classList.add('overrun');
-    const savings = createTableRow(footerData[0], currencyIndices, 'Savings');
+    const savings = createTableRow(footerData[2], currencyIndices, 'Savings');
     savings.classList.add('savings');
     footer.appendChild(totalSpent);
     footer.appendChild(budgetOverruns)
