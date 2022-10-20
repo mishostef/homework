@@ -6,3 +6,4 @@ export const bodyEmptyArr = (n)=>[
     new Array(n).fill(0),//other
     new Array(n).fill(0),//total
 ];
+export const footerEmptyArr = (n)=> [...Array(3)].map(e => Array(n).fill(0));

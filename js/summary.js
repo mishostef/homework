@@ -1,5 +1,5 @@
 import { getRecord, months, El } from "./utils.js";
-import { bodyEmptyArr } from "./constants.js";
+import { bodyEmptyArr, footerEmptyArr } from "./constants.js";
 const budgetsArray = [...getRecord('budget').values()];
 const expensesArray = [...getRecord('records').values()];
 const categories = ['Utilities', 'Groceries', 'Entertainment', 'Transport', 'Other'];
@@ -10,7 +10,8 @@ allDates.sort(dateSort);
 const sortedUnique = [...new Set(allDates)];
 const slicedDates = getPeriod(sortedUnique, 6);
 const length = slicedDates.length;
-const bodyDdata = bodyEmptyArr(length+1);
+const bodyDdata = bodyEmptyArr(length + 1);
+const footerData = footerEmptyArr(length + 1);
 console.log(slicedDates);
 const headerMonths = dateToMonthConverter(slicedDates);
 console.log(headerMonths);
@@ -19,6 +20,7 @@ console.log('expenses array', expensesArray);
 console.log(bodyData);
 const totalSpent = bodyData.pop();
 console.log('totalSpent', totalSpent);
+getFooterData(totalSpent, budgetsArray, footerData);
 
 function getAllDates(budgetArr, expensesArr) {
     const allDates = [];
@@ -65,17 +67,22 @@ function getBodyData(slicedDates, bodyDdata) {
                 const category = exp[2];
                 const categoryIndex = categories.indexOf(category);
                 bodyDdata[categoryIndex][dateIndex] += amount;
-                bodyDdata[categoryIndex][width-1] += amount;
-                bodyDdata[height-1][dateIndex] += amount;
+                bodyDdata[categoryIndex][width - 1] += amount;
+                bodyDdata[height - 1][dateIndex] += amount;
             }
         })
 
     })
     return bodyDdata;
 }
+//footer
+function getFooterData(total, budgetArr, footerArr) {
+    console.log('footerArr', footerArr);
 
-function getFooterData(total, budgetArr) {
-
+    budgetArray.forEach(record => {
+        // income += Number(record[1]);
+        // budget += Number(record[2]);
+    });
 }
 
 
@@ -83,7 +90,7 @@ function getFooterData(total, budgetArr) {
 const t = document.getElementsByClassName('editor')[0];
 
 const tableData = bodyData;
-const footerData = [
+const fD = [
     [380, 410, 360, 1150],
     [510, 480, 535, 1525],
     [510, 480, 535, 1525],
@@ -93,7 +100,7 @@ const body = t.querySelector('tbody');
 const headers = t.querySelector('thead');
 const newHeaders = createTableHeaders(['Category', ...headerMonths, 'Total']);
 const footer = t.querySelector('tfoot');
-const newFooter = createTableFooter(footerData);
+const newFooter = createTableFooter(fD);
 
 t.replaceChild(newHeaders, headers);
 t.replaceChild(newBody, body);
