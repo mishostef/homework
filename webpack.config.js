@@ -6,7 +6,8 @@ module.exports = {
         expenses:'./js/expenses.js',
         budget: './js/budget.js',
         summary:'./js/summary.js',
-        dashboard:'./js/dashboard.js'
+        dashboard:'./js/dashboard.js',
+        constants:'./js/constants.js'
     },
     output: {
         path: path.join(__dirname, 'dist'),

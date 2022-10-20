@@ -1,4 +1,5 @@
-import { getRecord, months, El } from "./utils.js"
+import { getRecord, months, El } from "./utils.js";
+import { bodyDdata } from "./constants.js";
 const budgetsArray = [...getRecord('budget').values()];
 const expensesArray = [...getRecord('records').values()];
 const categories = ['Utilities', 'Groceries', 'Entertainment', 'Transport', 'Other'];
@@ -7,13 +8,12 @@ console.log('expenses', expensesArray);
 console.log('budget', budgetsArray);
 const allDates = getAllDates(budgetsArray, expensesArray);
 allDates.sort(dateSort);
-console.log(allDates);
 const sortedUnique = [...new Set(allDates)];
 console.log(sortedUnique);
 const slicedDates = getPeriod(sortedUnique, 6);
 console.log(slicedDates);
 console.log(dateToMonthConverter(slicedDates));
-const bodyData = getBodyData(slicedDates);
+const bodyData = getBodyData(slicedDates, bodyDdata);
 console.log('expenses array', expensesArray);
 console.log(bodyData);
 
@@ -50,30 +50,27 @@ function dateToMonthConverter(dateArr) {
     return dateArr.map(x => x.split('.')[0]);
 }
 //za body
-function getBodyData(slicedDates) {
-    const bodyDdata = [
-        [0, 0, 0, 0],//utils
-        [0, 0, 0, 0],//groc
-        [0, 0, 0, 0],//ent
-        [0, 0, 0, 0],//trans
-        [0, 0, 0, 0],//other
-        [0, 0, 0, 0],//total
-    ];
+function getBodyData(slicedDates, bodyDdata) {
+    // const bodyDdata = [
+    //     [0, 0, 0, 0],//utils
+    //     [0, 0, 0, 0],//groc
+    //     [0, 0, 0, 0],//ent
+    //     [0, 0, 0, 0],//trans
+    //     [0, 0, 0, 0],//other
+    //     [0, 0, 0, 0],//total
+    // ];
 
     console.log(slicedDates);
-    expensesArray.forEach((exp, expIndex) => {
-        console.log(exp);
+    expensesArray.forEach((exp) => {
         const expDate = exp[0];
-        console.log(expDate);
         slicedDates.forEach((slicedDate, dateIndex) => {
-            console.log(slicedDate)
             if (slicedDate === expDate) {
                 const amount = Number(exp[3]);
                 const category = exp[2];
                 const categoryIndex = categories.indexOf(category);
-                console.log(categoryIndex);
-                console.log(amount);
                 bodyDdata[categoryIndex][dateIndex] += amount;
+                bodyDdata[categoryIndex][3] += amount;
+                bodyDdata[5][dateIndex] += amount;
             }
         })
 
@@ -86,13 +83,7 @@ function getBodyData(slicedDates) {
 
 const t = document.getElementsByClassName('editor')[0];
 
-const tableData = [
-    [380, 410, 360, 1150],
-    [510, 480, 535, 1525],
-    [510, 480, 535, 1525],
-    [510, 480, 535, 1525],
-    [510, 480, 535, 1525],
-]
+const tableData = bodyData;
 const footerData = [
     [380, 410, 360, 1150],
     [510, 480, 535, 1525],
