@@ -11,14 +11,13 @@ const sortedUniqueDates = [...new Set(allDates)];
 const slicedDates = getPeriod(sortedUniqueDates, 6);
 const length = slicedDates.length;
 const bodyDdata = bodyEmptyArr(length + 1);
-console.log(slicedDates);
 const headerMonths = dateToMonthConverter(slicedDates);
-console.log(headerMonths);
 const bodyData = getBodyData(slicedDates, bodyDdata);
 const totalSpent = bodyData.pop();
-console.log('totalSpent', totalSpent);
 const footerData = getFooterData(totalSpent, budgetsArray, slicedDates);
-console.log(footerData);
+
+const buttons = document.querySelectorAll('button.action');
+
 function getAllDates(budgetArr, expensesArr) {
     const allDates = [];
     expensesArr.forEach(exp => {
@@ -46,13 +45,12 @@ function dateSort(dateString1, dateString2) {
 function getPeriod(sortedDates, startIndex = 0) {
     return sortedDates.slice(startIndex, Math.min(sortedDates.length, startIndex + 3));
 }
-///za header
+
 function dateToMonthConverter(dateArr) {
     return dateArr.map(x => x.split('.')[0]);
 }
-//za body
+
 function getBodyData(slicedDates, bodyDdata) {
-    console.log(slicedDates);
     const width = bodyDdata[0].length;
     const height = bodyDdata.length;
     let totalExpenses = 0;
@@ -69,10 +67,8 @@ function getBodyData(slicedDates, bodyDdata) {
                 totalExpenses += amount;
             }
         });
-
     })
     bodyDdata[height - 1][width - 1] = totalExpenses;
-    console.log('bodyData=', bodyDdata)
     return bodyDdata;
 }
 //footer
@@ -81,7 +77,6 @@ function getFooterData(total, budgetArr, dates) {
     const footerWidth = total.length;
     const footerArr = [...Array(footerHeight)].map(e => Array(footerWidth).fill(0));
     footerArr[0] = total;
-    console.log(footerArr);
     budgetArr.forEach((record) => {
         const budgetDate = record[0];
         dates.forEach((d, di) => {
@@ -97,10 +92,8 @@ function getFooterData(total, budgetArr, dates) {
         if (total[t] !== 0) {
             footerArr[1][t] = -1 * Math.min(footerArr[1][t] - total[t], 0);
             footerArr[2][t] = Math.max(footerArr[2][t] - total[t], 0);
-
         }
     }
-    console.log(footerArr)
     return footerArr;
 }
 
