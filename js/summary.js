@@ -8,15 +8,29 @@ console.log('budget', budgetsArray);
 const allDates = getAllDates(budgetsArray, expensesArray);
 allDates.sort(dateSort);
 const sortedUniqueDates = [...new Set(allDates)];
-const slicedDates = getPeriod(sortedUniqueDates, 6);
-const length = slicedDates.length;
-const bodyDdata = bodyEmptyArr(length + 1);
-const headerMonths = dateToMonthConverter(slicedDates);
-const bodyData = getBodyData(slicedDates, bodyDdata);
-const totalSpent = bodyData.pop();
-const footerData = getFooterData(totalSpent, budgetsArray, slicedDates);
+console.log(sortedUniqueDates);
+let startIndex = 2;
+
+render(startIndex, sortedUniqueDates);
 
 const buttons = document.querySelectorAll('button.action');
+const [previousButton, nextButton] = [...buttons];
+
+
+previousButton.addEventListener('click', function (e) {
+    if (startIndex < 3) return;
+    startIndex -= 3;
+    alert(startIndex);
+    render(startIndex, sortedUniqueDates);
+});
+
+nextButton.addEventListener('click', function (e) {    
+    if (startIndex > sortedUniqueDates.length - 3) return;
+    startIndex += 3;
+    alert(startIndex);
+    render(startIndex, sortedUniqueDates);
+});
+
 
 function getAllDates(budgetArr, expensesArr) {
     const allDates = [];
@@ -99,22 +113,31 @@ function getFooterData(total, budgetArr, dates) {
 
 
 
-const t = document.getElementsByClassName('editor')[0];
-
-const tableData = bodyData;
-const newBody = createTableBody(tableData);
-const body = t.querySelector('tbody');
-const headers = t.querySelector('thead');
-const newHeaders = createTableHeaders(['Category', ...headerMonths, 'Total']);
-const footer = t.querySelector('tfoot');
-const newFooter = createTableFooter(footerData);
-
-t.replaceChild(newHeaders, headers);
-t.replaceChild(newBody, body);
-t.replaceChild(newFooter, footer);
 
 
 
+function render(startIndex, sortedUniqueDates) {
+    const slicedDates = getPeriod(sortedUniqueDates, startIndex);
+    const length = slicedDates.length;
+    const bodyDdata = bodyEmptyArr(length + 1);
+    const headerMonths = dateToMonthConverter(slicedDates);
+    const bodyData = getBodyData(slicedDates, bodyDdata);
+    const totalSpent = bodyData.pop();
+    const footerData = getFooterData(totalSpent, budgetsArray, slicedDates);
+
+    const t = document.getElementsByClassName('editor')[0];
+    const tableData = bodyData;
+    const newBody = createTableBody(tableData);
+    const body = t.querySelector('tbody');
+    const headers = t.querySelector('thead');
+    const newHeaders = createTableHeaders(['Category', ...headerMonths, 'Total']);
+    const footer = t.querySelector('tfoot');
+    const newFooter = createTableFooter(footerData);
+
+    t.replaceChild(newHeaders, headers);
+    t.replaceChild(newBody, body);
+    t.replaceChild(newFooter, footer);
+}
 
 function createTableFooter(footerData) {
     const footer = document.createElement('tfoot');
