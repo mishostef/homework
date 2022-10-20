@@ -7,11 +7,11 @@ console.log('expenses', expensesArray);
 console.log('budget', budgetsArray);
 const allDates = getAllDates(budgetsArray, expensesArray);
 allDates.sort(dateSort);
-const sortedUnique = [...new Set(allDates)];
-const slicedDates = getPeriod(sortedUnique, 6);
+const sortedUniqueDates = [...new Set(allDates)];
+const slicedDates = getPeriod(sortedUniqueDates, 6);
 const length = slicedDates.length;
 const bodyDdata = bodyEmptyArr(length + 1);
-const footerData = footerEmptyArr(length + 1);
+//const footerData = footerEmptyArr(length + 1);
 console.log(slicedDates);
 const headerMonths = dateToMonthConverter(slicedDates);
 console.log(headerMonths);
@@ -20,8 +20,8 @@ console.log('expenses array', expensesArray);
 console.log(bodyData);
 const totalSpent = bodyData.pop();
 console.log('totalSpent', totalSpent);
-getFooterData(totalSpent, budgetsArray, footerData);
-
+const fffdd = getFooterData(totalSpent, budgetsArray, slicedDates);
+console.log(fffdd);
 function getAllDates(budgetArr, expensesArr) {
     const allDates = [];
     expensesArr.forEach(exp => {
@@ -44,7 +44,6 @@ function dateSort(dateString1, dateString2) {
     const [month2, year2] = dateString2.split('.');
     return year1 - year2 || months.indexOf(month1) - months.indexOf(month2);
 }
-
 
 
 function getPeriod(sortedDates, startIndex = 0) {
@@ -70,19 +69,38 @@ function getBodyData(slicedDates, bodyDdata) {
                 bodyDdata[categoryIndex][width - 1] += amount;
                 bodyDdata[height - 1][dateIndex] += amount;
             }
-        })
+        });
 
     })
     return bodyDdata;
 }
 //footer
-function getFooterData(total, budgetArr, footerArr) {
+function getFooterData(total, budgetArr, dates) {
+    const footerHeight = 3;
+    const footerWidth = total.length;
+    const footerArr = [...Array(footerHeight)].map(e => Array(footerWidth).fill(0));
     console.log('footerArr', footerArr);
-
-    budgetArray.forEach(record => {
-        // income += Number(record[1]);
-        // budget += Number(record[2]);
+    footerArr[0] = total;
+    console.log(footerArr);
+    budgetArr.forEach((record, ri) => {
+        const budgetDate = record[0];
+        dates.forEach((d, di) => {
+            if (d === budgetDate) {
+                const income = Number(record[1]);
+                const budget = Number(record[2]);
+                footerArr[1][di] += budget;
+                footerArr[2][di] += income;
+            }
+        });
     });
+    for (let t = 0; t < total.length; t++) {
+        if (total[t] !== 0) {
+            footerArr[1][t] = -1 * Math.min(footerArr[1][t] - total[t], 0);
+            footerArr[2][t] = Math.max(footerArr[2][t] - total[t]);
+        }
+    }
+    console.log(footerArr)
+    return footerArr;
 }
 
 
