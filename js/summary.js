@@ -1,10 +1,8 @@
 import { getRecord, months, El } from "./utils.js";
-import { bodyEmptyArr, footerEmptyArr } from "./constants.js";
+import { bodyEmptyArr } from "./constants.js";
 const budgetsArray = [...getRecord('budget').values()];
 const expensesArray = [...getRecord('records').values()];
 const categories = ['Utilities', 'Groceries', 'Entertainment', 'Transport', 'Other'];
-console.log('expenses', expensesArray);
-console.log('budget', budgetsArray);
 const allDates = getAllDates(budgetsArray, expensesArray);
 allDates.sort(dateSort);
 const sortedUniqueDates = [...new Set(allDates)];
@@ -24,7 +22,7 @@ previousButton.addEventListener('click', function (e) {
     render(startIndex, sortedUniqueDates);
 });
 
-nextButton.addEventListener('click', function (e) {    
+nextButton.addEventListener('click', function (e) {
     if (startIndex > sortedUniqueDates.length - 3) return;
     startIndex += 3;
     alert(startIndex);
@@ -85,7 +83,7 @@ function getBodyData(slicedDates, bodyDdata) {
     bodyDdata[height - 1][width - 1] = totalExpenses;
     return bodyDdata;
 }
-//footer
+
 function getFooterData(total, budgetArr, dates) {
     const footerHeight = 3;
     const footerWidth = total.length;
@@ -111,11 +109,6 @@ function getFooterData(total, budgetArr, dates) {
     return footerArr;
 }
 
-
-
-
-
-
 function render(startIndex, sortedUniqueDates) {
     const slicedDates = getPeriod(sortedUniqueDates, startIndex);
     const length = slicedDates.length;
@@ -124,16 +117,13 @@ function render(startIndex, sortedUniqueDates) {
     const bodyData = getBodyData(slicedDates, bodyDdata);
     const totalSpent = bodyData.pop();
     const footerData = getFooterData(totalSpent, budgetsArray, slicedDates);
-
     const t = document.getElementsByClassName('editor')[0];
-    const tableData = bodyData;
-    const newBody = createTableBody(tableData);
+    const newBody = createTableBody(bodyData);
     const body = t.querySelector('tbody');
     const headers = t.querySelector('thead');
     const newHeaders = createTableHeaders(['Category', ...headerMonths, 'Total']);
     const footer = t.querySelector('tfoot');
     const newFooter = createTableFooter(footerData);
-
     t.replaceChild(newHeaders, headers);
     t.replaceChild(newBody, body);
     t.replaceChild(newFooter, footer);

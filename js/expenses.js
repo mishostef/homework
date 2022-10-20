@@ -2,10 +2,7 @@ import {
     months, truncateDate, getId, validateData, convertDatestring,
     getFormData, dateToString, createTableRow
 } from "./utils.js";
-// hydrate()
-// function hydrate(){
-//     tbody.replaceChildren(...[...records.values()].map(createExpenseRow));
-// }
+
 
 const categories = { "Other": 0, "Utilities": 1, "Groceries": 2, "Entertainment": 3, "Transport": 4 }
 const expensesTable = document.getElementsByClassName('editor')[0];
@@ -40,7 +37,11 @@ const setExpenses = (map) => {
 }
 const records = getExpenses();
 
-
+hydrate()
+function hydrate() {
+    const tbody = document.getElementsByTagName('tbody')[0];
+    tbody.replaceChildren(...[...records.values()].map(x=>createTableRow(x,[3])));
+}
 expensesForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const data = getFormData(e);
