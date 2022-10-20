@@ -1,8 +1,8 @@
-export const bodyDdata = [
-    [0, 0, 0, 0],//utils
-    [0, 0, 0, 0],//groc
-    [0, 0, 0, 0],//ent
-    [0, 0, 0, 0],//trans
-    [0, 0, 0, 0],//other
-    [0, 0, 0, 0],//total
+export const bodyEmptyArr = (n)=>[
+    new Array(n).fill(0),//utils
+    new Array(n).fill(0),//groc
+    new Array(n).fill(0),//ent
+    new Array(n).fill(0),//trans
+    new Array(n).fill(0),//other
+    new Array(n).fill(0),//total
 ];

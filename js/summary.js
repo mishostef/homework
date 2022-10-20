@@ -1,21 +1,24 @@
 import { getRecord, months, El } from "./utils.js";
-import { bodyDdata } from "./constants.js";
+import { bodyEmptyArr } from "./constants.js";
 const budgetsArray = [...getRecord('budget').values()];
 const expensesArray = [...getRecord('records').values()];
 const categories = ['Utilities', 'Groceries', 'Entertainment', 'Transport', 'Other'];
 console.log('expenses', expensesArray);
-
 console.log('budget', budgetsArray);
 const allDates = getAllDates(budgetsArray, expensesArray);
 allDates.sort(dateSort);
 const sortedUnique = [...new Set(allDates)];
-console.log(sortedUnique);
 const slicedDates = getPeriod(sortedUnique, 6);
+const length = slicedDates.length;
+const bodyDdata = bodyEmptyArr(length+1);
 console.log(slicedDates);
-console.log(dateToMonthConverter(slicedDates));
+const headerMonths = dateToMonthConverter(slicedDates);
+console.log(headerMonths);
 const bodyData = getBodyData(slicedDates, bodyDdata);
 console.log('expenses array', expensesArray);
 console.log(bodyData);
+const totalSpent = bodyData.pop();
+console.log('totalSpent', totalSpent);
 
 function getAllDates(budgetArr, expensesArr) {
     const allDates = [];
@@ -51,16 +54,9 @@ function dateToMonthConverter(dateArr) {
 }
 //za body
 function getBodyData(slicedDates, bodyDdata) {
-    // const bodyDdata = [
-    //     [0, 0, 0, 0],//utils
-    //     [0, 0, 0, 0],//groc
-    //     [0, 0, 0, 0],//ent
-    //     [0, 0, 0, 0],//trans
-    //     [0, 0, 0, 0],//other
-    //     [0, 0, 0, 0],//total
-    // ];
-
     console.log(slicedDates);
+    const width = bodyDdata[0].length;
+    const height = bodyDdata.length;
     expensesArray.forEach((exp) => {
         const expDate = exp[0];
         slicedDates.forEach((slicedDate, dateIndex) => {
@@ -69,8 +65,8 @@ function getBodyData(slicedDates, bodyDdata) {
                 const category = exp[2];
                 const categoryIndex = categories.indexOf(category);
                 bodyDdata[categoryIndex][dateIndex] += amount;
-                bodyDdata[categoryIndex][3] += amount;
-                bodyDdata[5][dateIndex] += amount;
+                bodyDdata[categoryIndex][width-1] += amount;
+                bodyDdata[height-1][dateIndex] += amount;
             }
         })
 
@@ -78,6 +74,9 @@ function getBodyData(slicedDates, bodyDdata) {
     return bodyDdata;
 }
 
+function getFooterData(total, budgetArr) {
+
+}
 
 
 
@@ -92,7 +91,7 @@ const footerData = [
 const newBody = createTableBody(tableData);
 const body = t.querySelector('tbody');
 const headers = t.querySelector('thead');
-const newHeaders = createTableHeaders(['Category', 'Jan', 'Feb', 'Mar', 'Total']);
+const newHeaders = createTableHeaders(['Category', ...headerMonths, 'Total']);
 const footer = t.querySelector('tfoot');
 const newFooter = createTableFooter(footerData);
 
