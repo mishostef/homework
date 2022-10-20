@@ -14,6 +14,7 @@ console.log(sortedUnique);
 const slicedDates = getPeriod(sortedUnique, 6);
 console.log(slicedDates);
 console.log(dateToMonthConverter(slicedDates));
+getBodyData(slicedDates);
 
 function getAllDates(budgetArr, expensesArr) {
     const allDates = [];
@@ -45,12 +46,36 @@ function dateSort(dateString1, dateString2) {
 function getPeriod(sortedDates, startIndex = 0) {
     return sortedDates.slice(startIndex, Math.min(sortedDates.length, startIndex + 3));
 }
-
+///za header
 function dateToMonthConverter(dateArr) {
     return dateArr.map(x => x.split('.')[0]);
 }
+//za body
+function getBodyData(slicedDates) {
+    const bodyDdata = [
+        [],//utils
+        [],//groc
+        [],//ent
+        [],//trans
+        [],//other
+        [],//total
+    ];
+
+    console.log(slicedDates);
+    expensesArray.forEach((exp, expIndex) => {
+        console.log(exp);
+        const expDate = expDate;
+        slicedDates.forEach(slicedDate=> {
+            if (slicedDate=== expDate){
+                bodyDdata[expIndex].push(Number(expensesArray[3]))
+            }else{
+                bodyDdata[expIndex].push(Number(expensesArray[3]))
+            }
+        })
+    })
 
 
+}
 
 
 
