@@ -6,7 +6,6 @@ console.log('expenses', expensesArray);
 
 console.log('budget', budgetsArray);
 const allDates = getAllDates(budgetsArray, expensesArray);
-console.log(allDates);
 allDates.sort(dateSort);
 console.log(allDates);
 const sortedUnique = [...new Set(allDates)];
@@ -14,7 +13,9 @@ console.log(sortedUnique);
 const slicedDates = getPeriod(sortedUnique, 6);
 console.log(slicedDates);
 console.log(dateToMonthConverter(slicedDates));
-getBodyData(slicedDates);
+const bodyData = getBodyData(slicedDates);
+console.log('expenses array', expensesArray);
+console.log(bodyData);
 
 function getAllDates(budgetArr, expensesArr) {
     const allDates = [];
@@ -24,13 +25,11 @@ function getAllDates(budgetArr, expensesArr) {
         const newDate = dateArr.join('.')
         exp[0] = newDate;
         allDates.push(newDate);
-    })
-    console.log(expensesArr)
+    });
     budgetArr.forEach(budget => {
         const budgetDate = budget[0];
-        console.log(budgetDate);
         allDates.push(budgetDate);
-    })
+    });
     return allDates;
 }
 
@@ -53,28 +52,33 @@ function dateToMonthConverter(dateArr) {
 //za body
 function getBodyData(slicedDates) {
     const bodyDdata = [
-        [],//utils
-        [],//groc
-        [],//ent
-        [],//trans
-        [],//other
-        [],//total
+        [0, 0, 0, 0],//utils
+        [0, 0, 0, 0],//groc
+        [0, 0, 0, 0],//ent
+        [0, 0, 0, 0],//trans
+        [0, 0, 0, 0],//other
+        [0, 0, 0, 0],//total
     ];
 
     console.log(slicedDates);
     expensesArray.forEach((exp, expIndex) => {
         console.log(exp);
-        const expDate = expDate;
-        slicedDates.forEach(slicedDate=> {
-            if (slicedDate=== expDate){
-                bodyDdata[expIndex].push(Number(expensesArray[3]))
-            }else{
-                bodyDdata[expIndex].push(Number(expensesArray[3]))
+        const expDate = exp[0];
+        console.log(expDate);
+        slicedDates.forEach((slicedDate, dateIndex) => {
+            console.log(slicedDate)
+            if (slicedDate === expDate) {
+                const amount = Number(exp[3]);
+                const category = exp[2];
+                const categoryIndex = categories.indexOf(category);
+                console.log(categoryIndex);
+                console.log(amount);
+                bodyDdata[categoryIndex][dateIndex] += amount;
             }
         })
+
     })
-
-
+    return bodyDdata;
 }
 
 
@@ -163,87 +167,3 @@ function createTableRow(tabledataArray, indicesArray, th) {
     });
     return tr;
 }
-
-
-
-
-
-
-
-
-
-// const summary = {};
-
-// const budgetTransformed = transformBudget();
-// console.log(JSON.stringify(budgetTransformed));
-
-
-// addExpensesToBudget();
-// console.log(JSON.stringify(budgetTransformed));
-
-// const table = getTableData(budgetTransformed);
-// console.log('table=', JSON.stringify(table));
-
-
-
-// function getTableData(budget, start = 0) {
-//     const table = [[], [], [], [], [], []];
-//     const sums = [0, 0, 0, 0, 0, 0];
-//     const end = start + 3;
-//     const allYearsBudgets = Object.values(budget);
-//     console.log(allYearsBudgets);
-//     for (let i = 0; i < allYearsBudgets.length; i++) {
-//         const yearBudget = allYearsBudgets[i];
-//         console.log(yearBudget);
-//         const sortedMonths = Object.keys(yearBudget).sort((a, b) => months.indexOf(a) - months.indexOf(b));
-//         console.log('sorted months=', sortedMonths);
-//         for (let j = 0; j < sortedMonths.length; j++) {
-//             if (start === end) return table;
-//             const month = sortedMonths[i];
-//             const monthBudget = yearBudget[month];
-//             console.log('month = ', month, ' monthBudget = ', monthBudget);
-//             for (let k = 0; k < 6; k++) {
-//                 table[k].push(monthBudget[k]);
-//             }
-//             start++;
-//         }
-//     }
-// }
-
-
-// function addExpensesToBudget() {
-//     expensesArray.forEach(exp => {
-//         const [day, month, year] = exp[0].split('.');
-//         const category = exp[2];
-//         const categoryIndex = categories.indexOf(category);
-//         const amount = Number(exp[3]);
-//         console.log(budgetTransformed[year]);
-//         const monthSummaryArray = (budgetTransformed[year])[month];
-//         if (monthSummaryArray) { //if there is a budget for that month
-//             monthSummaryArray[categoryIndex] += amount;
-//             const totalSpentIndex = 5;
-//             monthSummaryArray[totalSpentIndex] += amount;
-//             const budgetOverrunsIndex = 6;
-//             monthSummaryArray[budgetOverrunsIndex] = monthSummaryArray[budgetOverrunsIndex] - amount > 0 ? 0 :
-//                 amount - monthSummaryArray[budgetOverrunsIndex];
-
-//         }
-//     });
-// }
-
-
-// function transformBudget() {
-//     const budgetTransformed = {};
-//     budgetsArray.forEach(b => {
-//         const [month, year] = b[0].split('.');
-//         const income = Number(b[1]);
-//         const budget = Number(b[2]);
-//         console.log(`month=${month}   year=${year}`);
-//         if (budgetTransformed.hasOwnProperty(year)) {
-//             (budgetTransformed[year])[month] = [0, 0, 0, 0, 0, 0, budget, income];
-//         } else {
-//             budgetTransformed[year] = { [month]: [0, 0, 0, 0, 0, 0, budget, income] };
-//         }
-//     });
-//     return budgetTransformed;
-// }
