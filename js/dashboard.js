@@ -2,18 +2,26 @@ import { El, getRecord } from "./utils.js";
 const budgetsArray = [...getRecord('budget').values()];
 const expensesArray = [...getRecord('records').values()];
 const budgetsums = getBugetSums(budgetsArray);
-
 const expenses = getBreakdown(expensesArray);
 const maxExpense = Math.max(...Object.values(expenses));
 const rows = Object.entries(expenses).map(([name, value]) => createSummaryRow(name, value, maxExpense));
-console.log(rows);
 document.querySelector('.breakdown').replaceChildren(...rows);
 const spent = expenses.Total;
 const remaining = Math.max(budgetsums.budget - spent, 0);
 const savings = Math.max(budgetsums.income - spent, 0);
-const arr = [spent, remaining, savings, ...Object.values(expenses)];
-[...document.querySelectorAll('.cat-row span.row.value')].forEach((x, i) => x.textContent = arr[i]);
+setRowValues(spent, remaining, savings);
 
+resizeSummaryColumn(spent, remaining, savings);
+
+function resizeSummaryColumn(spent, remaining, savings) {
+    const summaryColumn = document.getElementsByClassName('right-col')[0];
+    [...summaryColumn.children].forEach(x => x.style.height *= 300 / Math.max(spent, remaining, savings));
+}
+
+function setRowValues(spent, remaining, savings) {
+    const arr = [spent, remaining, savings, ...Object.values(expenses)];
+    [...document.querySelectorAll('.cat-row span.row.value')].forEach((x, i) => x.textContent = arr[i]);
+}
 
 function getBugetSums(budgetsArray) {
     let income = 0;
