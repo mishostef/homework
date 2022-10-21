@@ -73,8 +73,7 @@ export function createTableRow(tabledataArray, indicesArray) {
     tabledataArray.forEach((element, index) => {
         const td = document.createElement('td');
         if (indicesArray.includes(index)) {
-            const span = El('span', {}, element);
-            span.classList.add('currency');
+            const span = El('span', {className:'currency'}, element);
             td.appendChild(span);
         } else {
             td.textContent = element;

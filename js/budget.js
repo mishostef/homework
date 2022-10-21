@@ -42,7 +42,6 @@ budgetForm.addEventListener('submit', (e) => {
     }
     const id = getId();
     const rowData = parseBudgetData(data);
-    console.log('rowdata= ', rowData)
     records.set(id, rowData);
     setRecord(records, 'budget');
     upsertRow(budgetTable, rowData, [1, 2]);
@@ -50,7 +49,6 @@ budgetForm.addEventListener('submit', (e) => {
 
 function upsertRow(table, rowData, currencyIndices) {
     const row = createTableRow(rowData, currencyIndices);
-    console.log('row=', row);
     if (rowToReplace) {
         table.querySelector('tbody').replaceChild(row, rowToReplace);
         rowToReplace = null;

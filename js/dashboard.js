@@ -4,14 +4,18 @@ const expensesArray = [...getRecord('records').values()];
 const budgetsums = getBugetSums(budgetsArray);
 const expenses = getBreakdown(expensesArray);
 const maxExpense = Math.max(...Object.values(expenses));
-const rows = Object.entries(expenses).map(([name, value]) => createSummaryRow(name, value, maxExpense));
-document.querySelector('.breakdown').replaceChildren(...rows);
+
 const spent = expenses.Total;
 const remaining = Math.max(budgetsums.budget - spent, 0);
 const savings = Math.max(budgetsums.income - spent, 0);
 setRowValues(spent, remaining, savings);
-
+resizeBarChart(expenses);
 resizeSummaryColumn(spent, remaining, savings);
+
+function resizeBarChart(expenses) {
+    const rows = Object.entries(expenses).map(([name, value]) => createSummaryRow(name, value, maxExpense));
+    document.querySelector('.breakdown').replaceChildren(...rows);
+}
 
 function resizeSummaryColumn(spent, remaining, savings) {
     const summaryColumn = document.getElementsByClassName('right-col')[0];

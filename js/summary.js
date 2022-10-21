@@ -6,7 +6,6 @@ const categories = ['Utilities', 'Groceries', 'Entertainment', 'Transport', 'Oth
 const allDates = getAllDates(budgetsArray, expensesArray);
 allDates.sort(dateSort);
 const sortedUniqueDates = [...new Set(allDates)];
-console.log(sortedUniqueDates);
 let startIndex = 0;
 
 render(startIndex, sortedUniqueDates);
@@ -18,14 +17,12 @@ const [previousButton, nextButton] = [...buttons];
 previousButton.addEventListener('click', function (e) {
     if (startIndex < 3) return;
     startIndex -= 3;
-    alert(startIndex);
     render(startIndex, sortedUniqueDates);
 });
 
 nextButton.addEventListener('click', function (e) {
     if (startIndex > sortedUniqueDates.length - 3) return;
     startIndex += 3;
-    alert(startIndex);
     render(startIndex, sortedUniqueDates);
 });
 
@@ -174,8 +171,7 @@ function createTableRow(tabledataArray, indicesArray, th) {
     tabledataArray.forEach((element, index) => {
         const td = document.createElement('td');
         if (indicesArray.includes(index)) {
-            const span = El('span', {}, element);
-            span.classList.add('currency');
+            const span = El('span', { className: 'currency' }, element);
             td.appendChild(span);
         } else {
             td.textContent = element;
