@@ -1,19 +1,19 @@
-import { getRecord } from "./utils.js";
+import { El, getRecord } from "./utils.js";
 const budgetsArray = [...getRecord('budget').values()];
 const expensesArray = [...getRecord('records').values()];
-console.log(budgetsArray);
-console.log(expensesArray);
-
 const budgetsums = getBugetSums(budgetsArray);
-console.log(JSON.stringify(budgetsums));
+
 const expenses = getBreakdown(expensesArray);
-console.log(JSON.stringify(expenses));
+const maxExpense = Math.max(...Object.values(expenses));
+const rows = Object.entries(expenses).map(([name, value]) => createSummaryRow(name, value, maxExpense));
+console.log(rows);
+document.querySelector('.breakdown').replaceChildren(...rows);
 const spent = expenses.Total;
 const remaining = Math.max(budgetsums.budget - spent, 0);
 const savings = Math.max(budgetsums.income - spent, 0);
 const arr = [spent, remaining, savings, ...Object.values(expenses)];
-console.log(arr);
 [...document.querySelectorAll('.cat-row span.row.value')].forEach((x, i) => x.textContent = arr[i]);
+
 
 function getBugetSums(budgetsArray) {
     let income = 0;
@@ -33,10 +33,27 @@ function getBreakdown(expensesArray) {
     expensesArray.forEach(expense => {
         const category = expense[2];
         const spent = Number(expense[3]);
-        console.log('category=', category);
-        console.log('spent=', spent);
         expenses[category] += spent;
         expenses.Total += spent;
     })
     return expenses;
 }
+
+function createSummaryRow(name, value, maxValue) {
+    const bar = El('span', { className: 'bar' });
+    bar.style.width = `${value / maxValue * 400 | 0}px`;
+    const result = El('div', { className: 'cat-row' },
+        El('span', { className: 'row label' }, name),
+        El('span', { className: 'row value' }, value),
+        El('div', { className: 'bar-area' }, bar),
+    );
+    return result;
+}
+
+{/* <div class="cat-row">
+<span class="row label">Entertainment</span>
+<span class="row value">150</span>
+<div class="bar-area">
+    <span class="bar" style="width: 150px"></span>
+</div>
+</div> */}

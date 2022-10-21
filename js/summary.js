@@ -7,7 +7,7 @@ const allDates = getAllDates(budgetsArray, expensesArray);
 allDates.sort(dateSort);
 const sortedUniqueDates = [...new Set(allDates)];
 console.log(sortedUniqueDates);
-let startIndex = 2;
+let startIndex = 0;
 
 render(startIndex, sortedUniqueDates);
 

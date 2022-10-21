@@ -73,4 +73,3 @@ expensesForm.addEventListener('submit', (e) => {
 function parseExpensesData(data) {
     return [truncateDate(data.date), data.name, Object.keys(categories)[+data.category], data.amount];
 }
-
