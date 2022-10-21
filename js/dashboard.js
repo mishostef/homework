@@ -20,7 +20,7 @@ function resizeSummaryColumn(spent, remaining, savings) {
 
 function setRowValues(spent, remaining, savings) {
     const arr = [spent, remaining, savings, ...Object.values(expenses)];
-    [...document.querySelectorAll('.cat-row span.row.value')].forEach((x, i) => x.textContent = arr[i]);
+    [...document.querySelectorAll('.cat-row span.row.value')].forEach((x, i) => x.textContent = arr[i] | 0);
 }
 
 function getBugetSums(budgetsArray) {
@@ -57,11 +57,3 @@ function createSummaryRow(name, value, maxValue) {
     );
     return result;
 }
-
-{/* <div class="cat-row">
-<span class="row label">Entertainment</span>
-<span class="row value">150</span>
-<div class="bar-area">
-    <span class="bar" style="width: 150px"></span>
-</div>
-</div> */}
