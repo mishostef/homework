@@ -29,10 +29,14 @@ const getExpenses = () => {
     const records = localStorage.getItem('records');
     if (!records || records === '{}') return new Map();
     const values = JSON.parse(records);
-    return new Map(values);
+    console.log('entries in expenses: ', [...Object.entries(values)])
+    return new Map([...Object.entries(values)]);
 }
 const setExpenses = (map) => {
-    const entries = JSON.stringify([...map.entries()]);
+    console.log('map is', map);
+    console.log('map.values', map.values());
+    console.log('map entries',map.entries())
+    const entries = JSON.stringify(Object.fromEntries([...map.entries()]));
     localStorage.setItem('records', entries);
 }
 const records = getExpenses();
@@ -40,7 +44,7 @@ const records = getExpenses();
 hydrate()
 function hydrate() {
     const tbody = document.getElementsByTagName('tbody')[0];
-    tbody.replaceChildren(...[...records.values()].map(x=>createTableRow(x,[3])));
+    tbody.replaceChildren(...[...records.values()].map(x => createTableRow(x, [3])));
 }
 expensesForm.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -57,8 +61,9 @@ expensesForm.addEventListener('submit', (e) => {
     }
     const id = getId();
     const rowData = parseExpensesData(data);
-    const storageData = rowData.slice();
-    storageData[0] = `${storageData[0]}.${new Date(data.date).getFullYear()}`;
+    const storageData = parseExpensesData(data);//rowData.slice();
+    //storageData[0] = `${storageData[0]}.${new Date(data.date).getFullYear()}`;
+    storageData.date = `${storageData.date}.${new Date(data.date).getFullYear()}`;
     records.set(id, storageData);
     setExpenses(records);
     const row = createTableRow(rowData, [3]);
@@ -71,5 +76,8 @@ expensesForm.addEventListener('submit', (e) => {
 })
 
 function parseExpensesData(data) {
-    return [truncateDate(data.date), data.name, Object.keys(categories)[+data.category], data.amount];
+    //return [truncateDate(data.date), data.name, Object.keys(categories)[+data.category], data.amount];
+    return {
+        date: truncateDate(data.date), name: data.name, categories: Object.keys(categories)[+data.category], amount: data.amount
+    };
 }

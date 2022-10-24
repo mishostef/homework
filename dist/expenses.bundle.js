@@ -97,8 +97,7 @@ function createTableRow(tabledataArray, indicesArray) {
     tabledataArray.forEach((element, index) => {
         const td = document.createElement('td');
         if (indicesArray.includes(index)) {
-            const span = El('span', {}, element);
-            span.classList.add('currency');
+            const span = El('span', {className:'currency'}, element);
             td.appendChild(span);
         } else {
             td.textContent = element;
@@ -180,15 +179,12 @@ var __webpack_exports__ = {};
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./utils.js */ "./js/utils.js");
 
-// hydrate()
-// function hydrate(){
-//     tbody.replaceChildren(...[...records.values()].map(createExpenseRow));
-// }
+
 
 const categories = { "Other": 0, "Utilities": 1, "Groceries": 2, "Entertainment": 3, "Transport": 4 }
 const expensesTable = document.getElementsByClassName('editor')[0];
 let rowToReplace = null;
-//edit event on table
+
 expensesTable.addEventListener('click', function (e) {
     const buttonText = e.target.textContent;
     const row = e.target.parentElement.parentElement;
@@ -218,7 +214,11 @@ const setExpenses = (map) => {
 }
 const records = getExpenses();
 
-
+hydrate()
+function hydrate() {
+    const tbody = document.getElementsByTagName('tbody')[0];
+    tbody.replaceChildren(...[...records.values()].map(x=>(0,_utils_js__WEBPACK_IMPORTED_MODULE_0__.createTableRow)(x,[3])));
+}
 expensesForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const data = (0,_utils_js__WEBPACK_IMPORTED_MODULE_0__.getFormData)(e);
@@ -234,8 +234,9 @@ expensesForm.addEventListener('submit', (e) => {
     }
     const id = (0,_utils_js__WEBPACK_IMPORTED_MODULE_0__.getId)();
     const rowData = parseExpensesData(data);
-    console.log('rowdata= ', rowData)
-    records.set(id, rowData);
+    const storageData = rowData.slice();
+    storageData[0] = `${storageData[0]}.${new Date(data.date).getFullYear()}`;
+    records.set(id, storageData);
     setExpenses(records);
     const row = (0,_utils_js__WEBPACK_IMPORTED_MODULE_0__.createTableRow)(rowData, [3]);
     if (rowToReplace) {
@@ -249,8 +250,6 @@ expensesForm.addEventListener('submit', (e) => {
 function parseExpensesData(data) {
     return [(0,_utils_js__WEBPACK_IMPORTED_MODULE_0__.truncateDate)(data.date), data.name, Object.keys(categories)[+data.category], data.amount];
 }
-
-
 })();
 
 /******/ })()

@@ -173,97 +173,76 @@ function createTableRow(tabledataArray, indicesArray) {
 var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
-/*!**********************!*\
-  !*** ./js/budget.js ***!
-  \**********************/
+/*!*************************!*\
+  !*** ./js/dashboard.js ***!
+  \*************************/
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./utils.js */ "./js/utils.js");
 
-const budgetForm = document.getElementById('new-budget');
-const budgetTable = document.getElementsByClassName('editor')[0];
-let rowToReplace = null;
+const budgetsArray = [...(0,_utils_js__WEBPACK_IMPORTED_MODULE_0__.getRecord)('budget').values()];
+const expensesArray = [...(0,_utils_js__WEBPACK_IMPORTED_MODULE_0__.getRecord)('records').values()];
+const budgetsums = getBugetSums(budgetsArray);
+const expenses = getBreakdown(expensesArray);
+const maxExpense = Math.max(...Object.values(expenses));
 
+const spent = expenses.Total;
+const remaining = Math.max(budgetsums.budget - spent, 0);
+const savings = Math.max(budgetsums.income - spent, 0);
+setRowValues(spent, remaining, savings);
+resizeBarChart(expenses);
+resizeSummaryColumn(spent, remaining, savings);
 
-const records = (0,_utils_js__WEBPACK_IMPORTED_MODULE_0__.getRecord)('budget');
-hydrate()
-function hydrate() {
-    const tbody = document.getElementsByTagName('tbody')[0];
-    tbody.replaceChildren(...[...records.values()].map(x => (0,_utils_js__WEBPACK_IMPORTED_MODULE_0__.createTableRow)(x, [1, 2])));
-}
-budgetTable.addEventListener('click', function (e) {
-    const buttonText = e.target.textContent;
-    const row = e.target.parentElement.parentElement;
-    if (buttonText === 'Delete') {
-        row.remove();
-    } else {
-        const [month, income, budget] = [...row.children].slice(0, 3).map(x => x.textContent);
-        document.querySelector('[name="month"]').value = monthStringConvertor(month);
-        document.querySelector('[name="income"]').value = income;
-        document.querySelector('[name="budget"]').value = budget;
-        rowToReplace = row;
-    }
-})
-
-function monthStringConvertor(monthString) {
-    const [month, year] = monthString.split('.');
-    const index = _utils_js__WEBPACK_IMPORTED_MODULE_0__.months.indexOf(month) + 1;
-    const mm = ('0' + index).slice(0, 2);
-    return `${mm}-${year}`;
+function resizeBarChart(expenses) {
+    const rows = Object.entries(expenses).map(([name, value]) => createSummaryRow(name, value, maxExpense));
+    document.querySelector('.breakdown').replaceChildren(...rows);
 }
 
-budgetForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const data = (0,_utils_js__WEBPACK_IMPORTED_MODULE_0__.getFormData)(e, 'month');
-    try {
-        validateBudgetData(data)
-    } catch (err) {
-        alert(err.message)
-        return;
-    }
-    const id = (0,_utils_js__WEBPACK_IMPORTED_MODULE_0__.getId)();
-    const rowData = parseBudgetData(data);
-    records.set(id, rowData);
-    (0,_utils_js__WEBPACK_IMPORTED_MODULE_0__.setRecord)(records, 'budget');
-    upsertRow(budgetTable, rowData, [1, 2]);
-});
-
-function upsertRow(table, rowData, currencyIndices) {
-    const row = (0,_utils_js__WEBPACK_IMPORTED_MODULE_0__.createTableRow)(rowData, currencyIndices);
-    if (rowToReplace) {
-        table.querySelector('tbody').replaceChild(row, rowToReplace);
-        rowToReplace = null;
-    } else {
-        table.querySelector('tbody').appendChild(row);
-    }
+function resizeSummaryColumn(spent, remaining, savings) {
+    const summaryColumn = document.getElementsByClassName('right-col')[0];
+    [...summaryColumn.children].forEach(x => x.style.height *= 300 / Math.max(spent, remaining, savings));
 }
 
-function parseBudgetData(data) {
-    const monthYearArr = data.month.split('-');
-    const monthIndex = parseInt(monthYearArr[0]) - 1;
-    const year = parseInt(monthYearArr[1]);
-    const month = `${_utils_js__WEBPACK_IMPORTED_MODULE_0__.months[monthIndex]}.${year}`;
-    return [month, data.income, data.budget];
+function setRowValues(spent, remaining, savings) {
+    const arr = [spent, remaining, savings, ...Object.values(expenses)];
+    [...document.querySelectorAll('.cat-row span.row.value')].forEach((x, i) => x.textContent = arr[i] | 0);
 }
 
-function validateBudgetData(data) {
-    if (data.month.trim() === '') {
-        throw new Error('month can not be emty');
-    }
-    else {
-        const { income, budget } = data;
-        const monthYearArr = data.month.split('-');
-        const month = parseInt(monthYearArr[0]);
-        const year = parseInt(monthYearArr[1]);
-        if (!month) throw new Error('month is not a number');
-        if (month > 12 || month < 1) throw new RangeError('month out of range');
-        if (!year) throw new Error('year is not anumber');
-        if (year > (new Date()).getFullYear || year < 1969) throw new RangeError('year out of range');
-        if (income <= 0) throw new RangeError('income should be positive');
-        if (budget <= 0) throw new RangeError('budget should be positive');
-    }
+function getBugetSums(budgetsArray) {
+    let income = 0;
+    let budget = 0;
+    budgetsArray.forEach(record => {
+        income += Number(record[1]);
+        budget += Number(record[2]);
+    });
+    return { income, budget };
+}
+
+function getBreakdown(expensesArray) {
+    const expenses = {
+        Utilities: 0, Groceries: 0,
+        Entertainment: 0, Transport: 0, Other: 0, Total: 0
+    };
+    expensesArray.forEach(expense => {
+        const category = expense[2];
+        const spent = Number(expense[3]);
+        expenses[category] += spent;
+        expenses.Total += spent;
+    })
+    return expenses;
+}
+
+function createSummaryRow(name, value, maxValue) {
+    const bar = (0,_utils_js__WEBPACK_IMPORTED_MODULE_0__.El)('span', { className: 'bar' });
+    bar.style.width = `${value / maxValue * 400 | 0}px`;
+    const result = (0,_utils_js__WEBPACK_IMPORTED_MODULE_0__.El)('div', { className: 'cat-row' },
+        (0,_utils_js__WEBPACK_IMPORTED_MODULE_0__.El)('span', { className: 'row label' }, name),
+        (0,_utils_js__WEBPACK_IMPORTED_MODULE_0__.El)('span', { className: 'row value' }, value),
+        (0,_utils_js__WEBPACK_IMPORTED_MODULE_0__.El)('div', { className: 'bar-area' }, bar),
+    );
+    return result;
 }
 })();
 
 /******/ })()
 ;
-//# sourceMappingURL=budget.bundle.js.map
+//# sourceMappingURL=dashboard.bundle.js.map

@@ -30,14 +30,14 @@ nextButton.addEventListener('click', function (e) {
 function getAllDates(budgetArr, expensesArr) {
     const allDates = [];
     expensesArr.forEach(exp => {
-        const dateArr = exp[0].split('.');
+        const dateArr = exp.date.split('.');
         dateArr.shift();
         const newDate = dateArr.join('.')
-        exp[0] = newDate;
+        exp.date = newDate;
         allDates.push(newDate);
     });
     budgetArr.forEach(budget => {
-        const budgetDate = budget[0];
+        const budgetDate = budget[1][0];
         allDates.push(budgetDate);
     });
     return allDates;
@@ -64,11 +64,11 @@ function getBodyData(slicedDates, bodyDdata) {
     const height = bodyDdata.length;
     let totalExpenses = 0;
     expensesArray.forEach((exp) => {
-        const expDate = exp[0];
+        const expDate = exp.date;
         slicedDates.forEach((slicedDate, dateIndex) => {
             if (slicedDate === expDate) {
-                const amount = Number(exp[3]);
-                const category = exp[2];
+                const amount = Number(exp.amount);
+                const category = exp.categories;
                 const categoryIndex = categories.indexOf(category);
                 bodyDdata[categoryIndex][dateIndex] += amount;
                 bodyDdata[categoryIndex][width - 1] += amount;
@@ -90,8 +90,8 @@ function getFooterData(total, budgetArr, dates) {
         const budgetDate = record[0];
         dates.forEach((d, di) => {
             if (d === budgetDate) {
-                const income = Number(record[1]);
-                const budget = Number(record[2]);
+                const income = Number(record[1][1]);
+                const budget = Number(record[1][2]);
                 footerArr[1][di] += budget;
                 footerArr[2][di] += income;
             }

@@ -43,8 +43,8 @@ function getBreakdown(expensesArray) {
         Entertainment: 0, Transport: 0, Other: 0, Total: 0
     };
     expensesArray.forEach(expense => {
-        const category = expense[2];
-        const spent = Number(expense[3]);
+        const category = expense.categories;
+        const spent = Number(expense.amount);
         expenses[category] += spent;
         expenses.Total += spent;
     })
