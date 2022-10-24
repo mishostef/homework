@@ -31,8 +31,8 @@ function getBugetSums(budgetsArray) {
     let income = 0;
     let budget = 0;
     budgetsArray.forEach(record => {
-        income += Number(record[1]);
-        budget += Number(record[2]);
+        income += Number(record.income);
+        budget += Number(record.budget);
     });
     return { income, budget };
 }
