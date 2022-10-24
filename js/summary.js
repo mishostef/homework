@@ -37,7 +37,7 @@ function getAllDates(budgetArr, expensesArr) {
         allDates.push(newDate);
     });
     budgetArr.forEach(budget => {
-        const budgetDate = budget[1][0];
+        const budgetDate = budget.date;
         allDates.push(budgetDate);
     });
     return allDates;
@@ -87,11 +87,11 @@ function getFooterData(total, budgetArr, dates) {
     const footerArr = [...Array(footerHeight)].map(e => Array(footerWidth).fill(0));
     footerArr[0] = total;
     budgetArr.forEach((record) => {
-        const budgetDate = record[0];
+        const budgetDate = record.date;
         dates.forEach((d, di) => {
             if (d === budgetDate) {
-                const income = Number(record[1][1]);
-                const budget = Number(record[1][2]);
+                const income = Number(record.income);
+                const budget = Number(record.budget);
                 footerArr[1][di] += budget;
                 footerArr[2][di] += income;
             }
