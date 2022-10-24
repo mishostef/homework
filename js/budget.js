@@ -62,7 +62,7 @@ function parseBudgetData(data) {
     const monthIndex = parseInt(monthYearArr[0]) - 1;
     const year = parseInt(monthYearArr[1]);
     const month = `${months[monthIndex]}.${year}`;
-    return [month, data.income, data.budget];
+    return { date: month, income: data.income, budget: data.budget };
 }
 
 function validateBudgetData(data) {
