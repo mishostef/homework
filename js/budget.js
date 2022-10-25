@@ -2,7 +2,7 @@ import { getFormData, getId, months, createTableRow, getRecord, setRecord } from
 const budgetForm = document.getElementById('new-budget');
 const budgetTable = document.getElementsByClassName('editor')[0];
 let rowToReplace = null;
-
+let rowToReplaceKey = null;
 
 const records = getRecord('budget');
 hydrate()
@@ -13,7 +13,11 @@ function hydrate() {
 budgetTable.addEventListener('click', function (e) {
     const buttonText = e.target.textContent;
     const row = e.target.parentElement.parentElement;
+    const rowInd = row.rowIndex - 1;
+    rowToReplaceKey = [...records.keys()][rowInd];
     if (buttonText === 'Delete') {
+        records.delete(rowToReplaceKey);
+        setRecord(records,'budget');
         row.remove();
     } else {
         const [month, income, budget] = [...row.children].slice(0, 3).map(x => x.textContent);
