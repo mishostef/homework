@@ -33,9 +33,6 @@ const getExpenses = () => {
     return new Map([...Object.entries(values)]);
 }
 const setExpenses = (map) => {
-    console.log('map is', map);
-    console.log('map.values', map.values());
-    console.log('map entries',map.entries())
     const entries = JSON.stringify(Object.fromEntries([...map.entries()]));
     localStorage.setItem('records', entries);
 }

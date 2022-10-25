@@ -108,13 +108,7 @@ function getFooterData(total, budgetArr, dates) {
 }
 
 function render(startIndex, sortedUniqueDates) {
-    const slicedDates = getPeriod(sortedUniqueDates, startIndex);
-    const length = slicedDates.length;
-    const bodyDdata = bodyEmptyArr(length + 1);
-    const headerMonths = dateToMonthConverter(slicedDates);
-    const bodyData = getBodyData(slicedDates, bodyDdata);
-    const totalSpent = bodyData.pop();
-    const footerData = getFooterData(totalSpent, budgetsArray, slicedDates);
+    const { bodyData, headerMonths, footerData } = init(sortedUniqueDates, startIndex);
     const t = document.getElementsByClassName('editor')[0];
     const newBody = createTableBody(bodyData);
     const body = t.querySelector('tbody');
@@ -125,6 +119,17 @@ function render(startIndex, sortedUniqueDates) {
     t.replaceChild(newHeaders, headers);
     t.replaceChild(newBody, body);
     t.replaceChild(newFooter, footer);
+}
+
+function init(sortedUniqueDates, startIndex) {
+    const slicedDates = getPeriod(sortedUniqueDates, startIndex);
+    const length = slicedDates.length;
+    const bodyDdata = bodyEmptyArr(length + 1);
+    const headerMonths = dateToMonthConverter(slicedDates);
+    const bodyData = getBodyData(slicedDates, bodyDdata);
+    const totalSpent = bodyData.pop();
+    const footerData = getFooterData(totalSpent, budgetsArray, slicedDates);
+    return { bodyData, headerMonths, footerData };
 }
 
 function createTableFooter(footerData) {
