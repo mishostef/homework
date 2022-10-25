@@ -47,7 +47,10 @@ const setExpenses = (map) => {
 
 function hydrate() {
     const tbody = document.getElementsByTagName('tbody')[0];
-    tbody.replaceChildren(...[...records.values()].map(x => createTableRow(x, [3])));
+    tbody.replaceChildren(...[...records.values()].map(x => {
+        x.date = truncateDate(x.date);
+        return createTableRow(x, [3]);
+    }));
 }
 expensesForm.addEventListener('submit', (e) => {
     e.preventDefault();
