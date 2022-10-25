@@ -17,7 +17,7 @@ budgetTable.addEventListener('click', function (e) {
     rowToReplaceKey = [...records.keys()][rowInd];
     if (buttonText === 'Delete') {
         records.delete(rowToReplaceKey);
-        setRecord(records,'budget');
+        setRecord(records, 'budget');
         row.remove();
     } else {
         const [month, income, budget] = [...row.children].slice(0, 3).map(x => x.textContent);
@@ -44,7 +44,7 @@ budgetForm.addEventListener('submit', (e) => {
         alert(err.message)
         return;
     }
-    const id = getId();
+    const id = rowToReplaceKey || getId();
     const rowData = parseBudgetData(data);
     records.set(id, rowData);
     setRecord(records, 'budget');
