@@ -7,12 +7,20 @@ import {
 const categories = { "Other": 0, "Utilities": 1, "Groceries": 2, "Entertainment": 3, "Transport": 4 }
 const expensesTable = document.getElementsByClassName('editor')[0];
 let rowToReplace = null;
+let rowToReplaceKey = null;
+const records = getExpenses();
+hydrate();
 
 expensesTable.addEventListener('click', function (e) {
     const buttonText = e.target.textContent;
     const row = e.target.parentElement.parentElement;
+    const rowInd = row.rowIndex - 1;
+    rowToReplaceKey = [...records.keys()][rowInd];
     if (buttonText === 'Delete') {
+        records.delete(rowToReplaceKey);
+        setExpenses(records);
         row.remove();
+        rowToReplaceKey = null;
     } else {
         const [date, name, category, amount] = [...row.children].slice(0, 4).map(x => x.textContent);
         document.querySelector('[name="date"]').value = convertDatestring(date);
@@ -25,7 +33,7 @@ expensesTable.addEventListener('click', function (e) {
 
 const expensesForm = document.getElementById('new-expense');
 
-const getExpenses = () => {
+function getExpenses() {
     const records = localStorage.getItem('records');
     if (!records || records === '{}') return new Map();
     const values = JSON.parse(records);
@@ -36,9 +44,7 @@ const setExpenses = (map) => {
     const entries = JSON.stringify(Object.fromEntries([...map.entries()]));
     localStorage.setItem('records', entries);
 }
-const records = getExpenses();
 
-hydrate()
 function hydrate() {
     const tbody = document.getElementsByTagName('tbody')[0];
     tbody.replaceChildren(...[...records.values()].map(x => createTableRow(x, [3])));
@@ -56,7 +62,7 @@ expensesForm.addEventListener('submit', (e) => {
         alert(err.message)
         return;
     }
-    const id = getId();
+    const id = rowToReplaceKey || getId();
     const rowData = parseExpensesData(data);
     const storageData = parseExpensesData(data);
     storageData.date = `${storageData.date}.${new Date(data.date).getFullYear()}`;
