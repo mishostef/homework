@@ -19,7 +19,12 @@ function resizeBarChart(expenses) {
 
 function resizeSummaryColumn(spent, remaining, savings) {
     const summaryColumn = document.getElementsByClassName('right-col')[0];
-    [...summaryColumn.children].forEach(x => x.style.height *= 300 / Math.max(spent, remaining, savings));
+    [...summaryColumn.children].forEach((x, i) => {
+        const current = [spent, remaining, savings][i];
+        const height = (300 * current / (spent + remaining + savings)) | 0;
+        x.style.height = height + 'px';
+        return x;
+    });
 }
 
 function setRowValues(spent, remaining, savings) {
