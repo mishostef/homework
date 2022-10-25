@@ -7,30 +7,12 @@ export const getRecord = (lsKey) => {
     const values = JSON.parse(records);
     console.log('vaues in getrecords:',values);
     console.log('entries in getrecords:',Object.entries(values));
-    //return new Map(values);
     return new Map(Object.entries(values));
 }
 export const setRecord = (map, lsKey) => {
     const entries = JSON.stringify(Object.fromEntries([...map.entries()]));
     localStorage.setItem(lsKey, entries);
 }
-
-
-// const getExpenses = () => {
-//     const records = localStorage.getItem('records');
-//     if (!records || records === '{}') return new Map();
-//     const values = JSON.parse(records);
-//     console.log('entries in expenses: ', [...Object.entries(values)])
-//     return new Map(values);
-// }
-// const setExpenses = (map) => {
-//     console.log('map is', map);
-//     console.log('map.values', map.values());
-//     console.log('map entries',map.entries())
-//     const entries = JSON.stringify(Object.fromEntries([...map.entries()]));
-//     localStorage.setItem('records', entries);
-// }
-
 
 export function truncateDate(dateString) {
     const date = new Date(dateString);
@@ -90,7 +72,6 @@ export function El(typeStr, attributesObj, ...content) {
 
 export function createTableRow(tabledataArray, indicesArray) {
     const tr = document.createElement('tr');
-    //tabledataArray
    Object.values(tabledataArray) .forEach((element, index) => {
         const td = document.createElement('td');
         if (indicesArray.includes(index)) {

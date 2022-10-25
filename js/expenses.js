@@ -61,8 +61,7 @@ expensesForm.addEventListener('submit', (e) => {
     }
     const id = getId();
     const rowData = parseExpensesData(data);
-    const storageData = parseExpensesData(data);//rowData.slice();
-    //storageData[0] = `${storageData[0]}.${new Date(data.date).getFullYear()}`;
+    const storageData = parseExpensesData(data);
     storageData.date = `${storageData.date}.${new Date(data.date).getFullYear()}`;
     records.set(id, storageData);
     setExpenses(records);
@@ -76,7 +75,6 @@ expensesForm.addEventListener('submit', (e) => {
 })
 
 function parseExpensesData(data) {
-    //return [truncateDate(data.date), data.name, Object.keys(categories)[+data.category], data.amount];
     return {
         date: truncateDate(data.date), name: data.name, categories: Object.keys(categories)[+data.category], amount: data.amount
     };
