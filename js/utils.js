@@ -5,8 +5,6 @@ export const getRecord = (lsKey) => {
     const records = localStorage.getItem(lsKey);
     if (!records || records === '{}') return new Map();
     const values = JSON.parse(records);
-    console.log('vaues in getrecords:',values);
-    console.log('entries in getrecords:',Object.entries(values));
     return new Map(Object.entries(values));
 }
 export const setRecord = (map, lsKey) => {

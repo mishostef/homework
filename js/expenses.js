@@ -37,7 +37,6 @@ function getExpenses() {
     const records = localStorage.getItem('records');
     if (!records || records === '{}') return new Map();
     const values = JSON.parse(records);
-    console.log('entries in expenses: ', [...Object.entries(values)])
     return new Map([...Object.entries(values)]);
 }
 const setExpenses = (map) => {

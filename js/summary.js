@@ -100,7 +100,6 @@ function getFooterData(total, budgetArr, dates) {
     for (let t = 0; t < total.length; t++) {
             const spent = total[t];
             const budget = footerArr[1][t];
-            console.log(`spent=${spent}, budget=${budget} t=${t}`);
             footerArr[1][t] = spent - budget > 0 ? spent - budget : 0;
             footerArr[2][t] = Math.max(footerArr[2][t] - total[t], 0);
     }
